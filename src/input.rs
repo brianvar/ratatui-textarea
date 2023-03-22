@@ -5,6 +5,7 @@ use crossterm::event::{
     Event as CrosstermEvent, KeyCode, KeyEvent, KeyModifiers, MouseEvent as CrosstermMouseEvent,
     MouseEventKind as CrosstermMouseEventKind,
 };
+use crossterm::event::KeyEventKind;
 #[cfg(feature = "termion")]
 use termion::event::{Event as TermionEvent, Key as TermionKey, MouseEvent as TermionMouseEvent};
 
@@ -100,7 +101,7 @@ impl From<CrosstermEvent> for Input {
     /// Convert [`crossterm::event::Event`] to [`Input`].
     fn from(event: CrosstermEvent) -> Self {
         match event {
-            CrosstermEvent::Key(key) => Self::from(key),
+            CrosstermEvent::Key(key) if key.kind == KeyEventKind::Press => Self::from(key),
             CrosstermEvent::Mouse(mouse) => Self::from(mouse),
             _ => Self::default(),
         }
